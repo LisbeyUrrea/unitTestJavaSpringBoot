@@ -1,14 +1,18 @@
-package com.example.lisbey.Controller;
+package com.example.lisbey.controller;
 
-import com.example.lisbey.Entity.UserEntity;
-import com.example.lisbey.Service.UsersEntityService;
+import com.example.lisbey.entity.UserEntity;
+import com.example.lisbey.service.UsersEntityService;
 import com.example.lisbey.exception.NotFoundException;
 import com.example.lisbey.exception.ValidationException;
+import dto.UserEntityDto;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -16,10 +20,11 @@ import static org.mockito.Mockito.*;
 //@ExtendWith(MockitoExtension.class)
 class UsersRestControllerTest {
 
+    private MockMvc mockMvc;
     static UsersRestController controller;
 
     //@Mock
-    //static UsersEntityService UsersEntityServiceTestMock;
+   // static UsersEntityService UsersEntityServiceTestMock;
     static UsersEntityService UsersEntityServiceTestMock = mock(UsersEntityService.class);
 
     @BeforeEach
@@ -34,14 +39,14 @@ class UsersRestControllerTest {
         @Test
         void shouldSaveTheUserAndReturnStatusCode200() {
 
-            UserEntity userToSave = UserEntity.builder().id((long) 1).name("Lisbey").lastName("Urrea").age("35")
+            UserEntityDto userToSave = UserEntityDto.builder().id((long) 1).name("Lisbey").lastName("Urrea").age("35")
                     .build();
 
             HttpStatus status = controller.saveUser(userToSave).getStatusCode();
 
             assertEquals(HttpStatus.OK, status);
 
-            verify(UsersEntityServiceTestMock).save(userToSave);
+            //verify(UsersEntityServiceTestMock).save(userToSave);
 
         }
 
@@ -54,7 +59,9 @@ class UsersRestControllerTest {
 
             UserEntity userSaved = controller.saveOrUpdateUserOnDatabase(userToSave);
 
-            assertAll(() -> assertNotNull(userSaved), () -> assertEquals(userToSave, userSaved));
+            assertAll("should Save the User And Return User a Entity Object",
+                    () -> assertNotNull(userSaved),
+                    () -> assertEquals(userToSave, userSaved));
 
             verify(UsersEntityServiceTestMock).save(userToSave);
 
@@ -68,8 +75,14 @@ class UsersRestControllerTest {
             when(controller.saveOrUpdateUserOnDatabase(userToSave))
                     .thenThrow(new ValidationException("INVALID_USER_FIELDS"));
 
-            assertAll(() -> assertThrows(ValidationException.class,
-                    () -> controller.saveOrUpdateUserOnDatabase(userToSave)));
+            assertAll("description",
+                    () -> assertThrows(ValidationException.class, () -> controller.saveOrUpdateUserOnDatabase(userToSave))
+            );
+
+        }
+
+        @Test
+        void shouldPast(){
 
         }
     }
@@ -84,9 +97,12 @@ class UsersRestControllerTest {
             UserEntity userToUpdate = UserEntity.builder().id((long) 2).name("Lisbey").lastName("Urrea").age("35")
                     .build();
 
+            UserEntityDto userToUpdate2 = UserEntityDto.builder().id((long) 2).name("Lisbey").lastName("Urrea").age("35")
+                    .build();
+
             when(UsersEntityServiceTestMock.findById((long) 2)).thenReturn(userToUpdate);
 
-            HttpStatus status = controller.updateUser((long) 2, userToUpdate).getStatusCode();
+            HttpStatus status = controller.updateUser((long) 2, userToUpdate2).getStatusCode();
 
             assertAll(() -> assertEquals(HttpStatus.OK, status));
 
@@ -99,7 +115,7 @@ class UsersRestControllerTest {
         @Test
         void shouldReturnNotFoundExceptionOnUpdateUser() {
 
-            UserEntity userToUpdate = UserEntity.builder().name("Lisbey").lastName("Urrea").age("35").build();
+            UserEntityDto userToUpdate = UserEntityDto.builder().name("Lisbey").lastName("Urrea").age("35").build();
 
 
             when(controller.updateUser((long) 2, userToUpdate)).thenThrow(new NotFoundException("Usuario no encontrado"));

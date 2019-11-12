@@ -1,4 +1,4 @@
-package com.example.lisbey.Entity;
+package com.example.lisbey.entity;
 
 import java.io.Serializable;
 
@@ -9,14 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -33,6 +30,7 @@ public class UserEntity implements Serializable{
 	
 	@NotEmpty(message = "El campo lastName es requerido")
 	private String lastName;
+
 	private  String age;
 	
 	/**

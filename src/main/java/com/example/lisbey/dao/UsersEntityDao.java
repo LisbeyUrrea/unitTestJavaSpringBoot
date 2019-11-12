@@ -1,9 +1,8 @@
-package com.example.lisbey.Dao;
+package com.example.lisbey.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
-import com.example.lisbey.Entity.UserEntity;
+import com.example.lisbey.entity.UserEntity;
 
 public interface UsersEntityDao  extends JpaRepository<UserEntity, Long>{
 

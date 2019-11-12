@@ -1,15 +1,13 @@
-package com.example.lisbey.Service.Impl;
+package com.example.lisbey.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.lisbey.Dao.UsersEntityDao;
-import com.example.lisbey.Entity.UserEntity;
-import com.example.lisbey.Service.UsersEntityService;
-import com.example.lisbey.exception.NotFoundException;
+import com.example.lisbey.dao.UsersEntityDao;
+import com.example.lisbey.entity.UserEntity;
+import com.example.lisbey.service.UsersEntityService;
 
 
 
@@ -21,16 +19,16 @@ public class UserEntityServiceImpl implements UsersEntityService {
 
 	@Override
 	public List<UserEntity> findAll() {
-		return (List<UserEntity>) usersDao.findAll();
+		return usersDao.findAll();
 	}
 
 	@Override
-	public UserEntity findById(Long id) throws NotFoundException {
-		Optional<UserEntity> userFound = null;
+	public UserEntity findById(Long id) {
+		UserEntity userFound = null;
 
-		userFound = usersDao.findById(id);
+		userFound = usersDao.findById(id).orElse(null);
 
-		return userFound.get();
+		return userFound;
 	}
 
 	@Override
