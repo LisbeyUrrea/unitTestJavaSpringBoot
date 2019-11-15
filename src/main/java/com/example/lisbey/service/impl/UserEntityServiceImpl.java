@@ -32,8 +32,6 @@ public class UserEntityServiceImpl implements UsersEntityService {
 			throw new NotFoundException("Usuario no encontrado");
 
 		}
-		
-		
 	}
 
 	@Override
