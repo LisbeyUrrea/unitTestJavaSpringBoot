@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 
-import dto.UserEntityDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.lisbey.dto.UserEntityDto;
 import com.example.lisbey.entity.UserEntity;
 import com.example.lisbey.service.UsersEntityService;
 import com.example.lisbey.exception.NotFoundException;
@@ -38,24 +38,28 @@ public class UsersRestController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Object>> findAll() {
+	public ResponseEntity<?> findAll() {
 
 		Map<String, Object> response = new HashMap<>();
 
 		List<UserEntity> userList = usersService.findAll();
+		
 
 		response.put("data", userList);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserEntity> findUserById(@PathVariable Long id) throws NotFoundException {
+	public ResponseEntity<?> findUserById(@PathVariable Long id) throws NotFoundException {
+		Map<String, Object> response = new HashMap<>();
 
-		UserEntity userFind;
-		userFind = findUserByIdAndReturnTheUser(id);
+		UserEntity userFind = findUserByIdAndReturnTheUser(id);
+		
+		System.out.print(userFind.getAge());
 
-		return new ResponseEntity<>(userFind, HttpStatus.OK);
+		response.put("data", userFind);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
 
@@ -73,14 +77,16 @@ public class UsersRestController {
 
 	@Transactional
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserEntity> saveUser(@RequestBody UserEntityDto user) {
+	public ResponseEntity<?> saveUser(@RequestBody UserEntityDto user) {
+		Map<String, Object> response = new HashMap<>();
 
 		ModelMapper modelMapper = new ModelMapper();
 		UserEntity userToSaved = modelMapper.map(user,UserEntity.class );
 
 		UserEntity userSaved = saveOrUpdateUserOnDatabase(userToSaved);
 
-		return new ResponseEntity<>(userSaved, HttpStatus.OK);
+		response.put("data", userSaved);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
 
@@ -90,7 +96,9 @@ public class UsersRestController {
 
 	@Transactional
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntityDto user) throws NotFoundException {
+	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserEntityDto user) throws NotFoundException {
+		Map<String, Object> response = new HashMap<>();
+
 		UserEntity userFind = null;
 		
 		userFind = findUserByIdAndReturnTheUser(id);
@@ -101,15 +109,17 @@ public class UsersRestController {
 
 		UserEntity userSaved = saveOrUpdateUserOnDatabase(userFind);
 
-		return new ResponseEntity<>(userSaved, HttpStatus.OK);
+		response.put("data", userSaved);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-
+	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+		Map<String, Object> response = new HashMap<>();
 		try {
 			usersService.delete(id);
-			return new ResponseEntity<>("Usuario eliminado exitosamente.", HttpStatus.OK);
+			response.put("data", "Usuario eliminado exitosamente.");
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			
 		} catch (NotFoundException e) {
 			throw new NotFoundException("El usuario con el id "+ id +" No existe en la base de datos");

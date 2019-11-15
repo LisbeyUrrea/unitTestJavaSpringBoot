@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.lisbey.dao.UsersEntityDao;
 import com.example.lisbey.entity.UserEntity;
+import com.example.lisbey.exception.NotFoundException;
 import com.example.lisbey.service.UsersEntityService;
-
-
 
 @Service
 public class UserEntityServiceImpl implements UsersEntityService {
@@ -23,12 +22,18 @@ public class UserEntityServiceImpl implements UsersEntityService {
 	}
 
 	@Override
-	public UserEntity findById(Long id) {
-		UserEntity userFound = null;
+	public UserEntity findById(Long id)  {
+		
+		try {
+			
+			return usersDao.findById(id).get();
+			
+		} catch (NotFoundException e) {
+			throw new NotFoundException("Usuario no encontrado");
 
-		userFound = usersDao.findById(id).orElse(null);
-
-		return userFound;
+		}
+		
+		
 	}
 
 	@Override

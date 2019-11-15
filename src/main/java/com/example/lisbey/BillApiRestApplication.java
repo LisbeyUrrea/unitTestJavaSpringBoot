@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BillApiRestApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BillApiRestApplication.class, args);
+		SpringApplication.run(BillApiRestApplication.class);
 	}
 
 }

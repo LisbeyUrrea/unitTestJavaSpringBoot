@@ -1,18 +1,18 @@
 package com.example.lisbey.controller;
 
+import com.example.lisbey.dto.UserEntityDto;
 import com.example.lisbey.entity.UserEntity;
 import com.example.lisbey.service.UsersEntityService;
 import com.example.lisbey.exception.NotFoundException;
 import com.example.lisbey.exception.ValidationException;
-import dto.UserEntityDto;
-import org.junit.Before;
+
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
 //@ExtendWith(MockitoExtension.class)
 class UsersRestControllerTest {
 
-    private MockMvc mockMvc;
     static UsersRestController controller;
 
     //@Mock
@@ -39,12 +38,14 @@ class UsersRestControllerTest {
         @Test
         void shouldSaveTheUserAndReturnStatusCode200() {
 
-            UserEntityDto userToSave = UserEntityDto.builder().id((long) 1).name("Lisbey").lastName("Urrea").age("35")
-                    .build();
+            UserEntityDto userToSave = UserEntityDto.builder().id((long) 1).name("Lisbey").lastName("Urrea").age("35").build();
 
             HttpStatus status = controller.saveUser(userToSave).getStatusCode();
 
-            assertEquals(HttpStatus.OK, status);
+            assertAll(
+                    () -> assertNotNull(status),
+                    () -> assertEquals(HttpStatus.OK, status)
+            );
 
             //verify(UsersEntityServiceTestMock).save(userToSave);
 
@@ -68,7 +69,7 @@ class UsersRestControllerTest {
         }
 
         @Test
-        void shouldReturnThrowsValidationExceptionOnSaveUserWithoutAllFills() {
+        void shouldReturnThrowsValidationExceptionOnSaveUserWithoutFills() {
 
             UserEntity userToSave = UserEntity.builder().name("Lisbey").age("35").build();
 
@@ -78,12 +79,6 @@ class UsersRestControllerTest {
             assertAll("description",
                     () -> assertThrows(ValidationException.class, () -> controller.saveOrUpdateUserOnDatabase(userToSave))
             );
-
-        }
-
-        @Test
-        void shouldPast(){
-
         }
     }
 

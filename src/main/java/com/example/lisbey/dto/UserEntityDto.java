@@ -1,4 +1,4 @@
-package dto;
+package com.example.lisbey.dto;
 
 import lombok.*;
 
