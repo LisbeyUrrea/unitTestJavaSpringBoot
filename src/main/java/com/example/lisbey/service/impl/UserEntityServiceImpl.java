@@ -22,16 +22,16 @@ public class UserEntityServiceImpl implements UsersEntityService {
 	}
 
 	@Override
-	public UserEntity findById(Long id)  {
-		
-		try {
-			
-			return usersDao.findById(id).get();
-			
-		} catch (NotFoundException e) {
-			throw new NotFoundException("Usuario no encontrado");
-
+	public UserEntity findById(Long id) throws NotFoundException {
+		UserEntity user= null;
+		user = usersDao.findById(id).orElse(null);
+		if(user != null) {
+			return user;
+		}else {
+			throw new NotFoundException();
 		}
+			
+
 	}
 
 	@Override

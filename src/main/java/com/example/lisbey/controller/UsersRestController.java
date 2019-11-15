@@ -51,15 +51,13 @@ public class UsersRestController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findUserById(@PathVariable Long id) throws NotFoundException {
+	public ResponseEntity<?> findUserById(@PathVariable Long id)  {
 		Map<String, Object> response = new HashMap<>();
 
-		UserEntity userFind = findUserByIdAndReturnTheUser(id);
-		
-		System.out.print(userFind.getAge());
-
-		response.put("data", userFind);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+			UserEntity userFind = findUserByIdAndReturnTheUser(id);
+			
+			response.put("data", userFind);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
 
@@ -70,7 +68,7 @@ public class UsersRestController {
 			return usersService.findById(id);
 
 		} catch (NotFoundException e) {
-			throw new NotFoundException("Usuario no encontrado");
+			throw new NotFoundException("El usuario con el id "+id+" no existe en la base de datos");
 
 		}
 	}
