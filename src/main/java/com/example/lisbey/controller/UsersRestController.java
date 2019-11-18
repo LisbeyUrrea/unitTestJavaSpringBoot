@@ -38,7 +38,7 @@ public class UsersRestController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findAll() {
+	public ResponseEntity<Map<String, Object>> findAll() {
 
 		Map<String, Object> response = new HashMap<>();
 
@@ -51,7 +51,7 @@ public class UsersRestController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> findUserById(@PathVariable Long id)  {
+	public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id)  {
 		Map<String, Object> response = new HashMap<>();
 
 			UserEntity userFind = findUserByIdAndReturnTheUser(id);
@@ -75,7 +75,7 @@ public class UsersRestController {
 
 	@Transactional
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> saveUser(@RequestBody UserEntityDto user) {
+	public ResponseEntity<Map<String, Object>> saveUser(@RequestBody UserEntityDto user) {
 		Map<String, Object> response = new HashMap<>();
 
 		ModelMapper modelMapper = new ModelMapper();
@@ -94,7 +94,7 @@ public class UsersRestController {
 
 	@Transactional
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserEntityDto user) throws NotFoundException {
+	public ResponseEntity<Map<String, Object>> updateUser(@PathVariable Long id, @RequestBody UserEntityDto user) throws NotFoundException {
 		Map<String, Object> response = new HashMap<>();
 
 		UserEntity userFind = null;
@@ -112,7 +112,7 @@ public class UsersRestController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable Long id) {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			usersService.delete(id);

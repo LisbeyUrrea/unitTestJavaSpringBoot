@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 //@ExtendWith(MockitoExtension.class)
 class UsersRestControllerTest {
 
-    static UsersRestController controller;
+    private UsersRestController controller;
 
     //@Mock
    // static UsersEntityService UsersEntityServiceTestMock;
@@ -69,6 +69,23 @@ class UsersRestControllerTest {
         }
 
         @Test
+        void shouldReturnTheRightUserObjetWhenSave(){
+            UserEntity userToSave = UserEntity.builder().name("Lisbey").lastName("Urrea").age("35").build();
+
+            when(controller.saveOrUpdateUserOnDatabase(userToSave)).thenReturn(userToSave);
+
+            UserEntity userSaved = controller.saveOrUpdateUserOnDatabase(userToSave);
+
+            assertAll("should Save the User And the Return the asme user",
+                    () -> assertNotNull(userSaved),
+                    () -> assertEquals(userToSave.getAge(), userSaved.getAge()),
+                    () -> assertEquals(userToSave.getLastName(), userSaved.getLastName()),
+                    () -> assertEquals(userToSave.getName(), userSaved.getName()));
+
+            verify(UsersEntityServiceTestMock).save(userToSave);
+        }
+
+        @Test
         void shouldReturnThrowsValidationExceptionOnSaveUserWithoutFills() {
 
             UserEntity userToSave = UserEntity.builder().name("Lisbey").age("35").build();
@@ -80,6 +97,8 @@ class UsersRestControllerTest {
                     () -> assertThrows(ValidationException.class, () -> controller.saveOrUpdateUserOnDatabase(userToSave))
             );
         }
+
+
     }
 
     @Nested
@@ -118,7 +137,6 @@ class UsersRestControllerTest {
             assertThrows(NotFoundException.class, () -> controller.updateUser((long) 2, userToUpdate));
 
         }
-
     }
 
     @Nested

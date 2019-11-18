@@ -28,7 +28,7 @@ public class UserEntityServiceImpl implements UsersEntityService {
 		if(user != null) {
 			return user;
 		}else {
-			throw new NotFoundException();
+			throw new NotFoundException("");
 		}
 			
 
