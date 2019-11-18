@@ -43,9 +43,9 @@ public class UsersRestController {
 		Map<String, Object> response = new HashMap<>();
 
 		List<UserEntity> userList = usersService.findAll();
-		
 
 		response.put("data", userList);
+		response.put("message", "Todos los usuarios del sistema.");
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
@@ -57,6 +57,7 @@ public class UsersRestController {
 			UserEntity userFind = findUserByIdAndReturnTheUser(id);
 			
 			response.put("data", userFind);
+		response.put("message", "Usuario con el id "+id);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
@@ -84,6 +85,7 @@ public class UsersRestController {
 		UserEntity userSaved = saveOrUpdateUserOnDatabase(userToSaved);
 
 		response.put("data", userSaved);
+		response.put("message", "Usuario almacenado exitosamente.");
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
 	}
@@ -108,6 +110,7 @@ public class UsersRestController {
 		UserEntity userSaved = saveOrUpdateUserOnDatabase(userFind);
 
 		response.put("data", userSaved);
+		response.put("message", "Usuario actualizado exitosamente.");
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
@@ -116,7 +119,8 @@ public class UsersRestController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			usersService.delete(id);
-			response.put("data", "Usuario eliminado exitosamente.");
+			response.put("data", null);
+			response.put("message", "Usuario eliminado exitosamente.");
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 			
 		} catch (NotFoundException e) {
@@ -127,3 +131,4 @@ public class UsersRestController {
 	}
 
 }
+
